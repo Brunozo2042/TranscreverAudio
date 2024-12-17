@@ -4,15 +4,14 @@ import ffmpeg
 import sys
 import os
 
-# Garante que a pasta "audios" existe
-output_dir = "audios"
+# Caminho fixo onde o áudio será salvo
+output_dir = "./audios"
 if not os.path.exists(output_dir):
     os.makedirs(output_dir)
 
-# Define o caminho de saída na pasta "audios"
 ydl_opts = {
     'format': 'bestaudio/best',
-    'outtmpl': os.path.join(output_dir, '%(title)s.%(ext)s'),
+    'outtmpl': os.path.join(output_dir, '%(title)s.%(ext)s'),  # Caminho fixo
     'postprocessors': [{
         'key': 'FFmpegExtractAudio',
         'preferredcodec': 'wav',
@@ -20,8 +19,10 @@ ydl_opts = {
 }
 
 def download_from_url(url):
-    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-        ydl.download([url])
+    ydl.download([url])
+    stream = ffmpeg.input('output.m4a')
+    stream = ffmpeg.output(stream, 'output.wav')
+
 
 with yt_dlp.YoutubeDL(ydl_opts) as ydl:
     args = sys.argv[1:]
@@ -31,10 +32,7 @@ with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         print("If a link is given it will automatically convert it to .wav. Otherwise a prompt will be shown")
         exit()
     if len(args) == 0:
-        url = input("Enter Youtube URL: ")
+        url=input("Enter Youtube URL: ")
         download_from_url(url)
     else:
         download_from_url(args[0])
-
-# Transcrever o audio
-# os.system("python audiototext.py")

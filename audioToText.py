@@ -54,7 +54,7 @@ for arquivo in dir_audio.iterdir():
                         try:
                             texto_segmento = reconhecedor.recognize_google(audio_segment, language="pt")
                             f.write(texto_segmento + "\n")  # Salva o texto parcial no arquivo
-                        except sr.UnknownValueError:
+                        except sr.UnknownValueError: 
                             print(f"Segmento {offset}-{offset + DURACAO_SEGMENTO}s: Não foi possível reconhecer o áudio.")
                             f.write("[Inaudível]\n")
                         except sr.RequestError as e:
